@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Clés · RSA File Secure{% endblock %}
+{% block content %}
+<h1>Génère tes clés RSA</h1>
+<p class="muted lead">À faire une seule fois : tu réutilises ensuite la même paire pour tous tes fichiers.</p>
+<div class="card gen">
+  <div class="grow"><label class="lab" for="bits">Taille du module</label>
+    <select id="bits" class="inp">
+      {% for b in bits %}<option value="{{ b }}">{{ b }} bits{{ "" if b == 1024 else " (recommandé)" }}</option>{% endfor %}
+    </select></div>
+  <button class="btn pri" type="button" id="gen">Générer les clés</button>
+</div>
+<div id="error" class="note err" role="alert" hidden></div>
+<div class="cols" id="keys" hidden>
+  <div class="card">
+    <div class="head"><h2>Clé publique</h2><span class="badge g">À partager</span></div>
+    <span class="lab">Module</span><div class="mono" id="pub-n"></div>
+    <span class="lab"></span><div class="mono" id="pub-e"></div>
+    <div class="note info">Cette clé sera utiliser pour chiffrer tous les fichiers.</div>
+    <div class="row"><button class="btn out" type="button" id="copy-pub">Copier</button>
+      <button class="btn pri" type="button" id="dl-pub">Télécharger</button></div>
+  </div>
+  <div class="card">
+    <div class="head"><h2>Clé privée</h2><span class="badge r">Secrète</span></div>
+    <span class="lab">Module</span><div class="mono" id="priv-n"></div>
+    <span class="lab"></span><div class="mono" id="priv-d"></div>
+    <div class="note err">Ne la partage jamais et garde votre clé privée en lieu sûr : sans lui, tes fichiers reçus restent illisibles.</div>
+    <div class="row"><button class="btn out danger" type="button" id="dl-priv">Télécharger</button></div>
+  </div>
+</div>
+{% endblock %}

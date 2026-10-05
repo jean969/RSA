@@ -1,0 +1,35 @@
+{% macro dropzone(title, label, accept="") %}
+<div class="card">
+  <h2><span class="step">1</span>{{ title }}</h2>
+  <div class="drop" data-drop>
+    <strong>{{ label }}</strong>
+    <p>ou parcours ton ordinateur</p>
+    <input type="file" name="file" id="file" accept="{{ accept }}" hidden>
+    <button class="btn out" type="button" data-pick="file">Choisir un fichier</button>
+  </div>
+  <div class="fileinfo" id="fileinfo" hidden></div>
+</div>
+{% endmacro %}
+
+{% macro key_card(title, second_id, second_label, second_hint, tip) %}
+<div class="card">
+  <h2><span class="step">2</span>{{ title }}</h2>
+  <input type="file" name="key_file" id="key_file" accept=".json,application/json" hidden>
+  <button class="btn out wide" type="button" data-pick="key_file">Importer le fichier (.json) qui contient votre clé</button>
+  <div class="fileinfo" id="keyinfo" hidden></div>
+  <p class="or">ou saisir manuellement</p>
+  <label class="lab" for="n">Module</label>
+  <input class="inp" id="n" name="n" placeholder="Colle ici le module n" autocomplete="off">
+  <label class="lab" for="{{ second_id }}">{{ second_label }}</label>
+  <input class="inp" id="{{ second_id }}" name="{{ second_id }}" placeholder="{{ second_hint }}" autocomplete="off">
+  <div class="note info">{{ tip }}</div>
+</div>
+{% endmacro %}
+
+{% macro action_bar(title, text, button) %}
+<div class="card bar">
+  <div><strong>{{ title }}</strong><div class="muted" id="hint">{{ text }}</div></div>
+  <button class="btn pri" type="submit" id="go">{{ button }}</button>
+</div>
+<div id="result" role="status" aria-live="polite"></div>
+{% endmacro %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "_macros.html" import dropzone, key_card, action_bar %}
+{% block title %}Chiffrer · RSA File Secure{% endblock %}
+{% block content %}
+<h1>Chiffre un fichier</h1>
+<form data-ajax action="{{ url_for('encrypt_post') }}" method="post" enctype="multipart/form-data" data-busy="Chiffrement en cours…" data-ok="Fichier chiffré">
+  <div class="cols">
+    {{ dropzone("Fichier à chiffrer", "Glisse ton fichier ici") }}
+    {{ key_card("Clé publique", "", "", "", "Utilise une clé publique. ") }}
+  </div>
+  {{ action_bar("Prêt à chiffrer", "", "Chiffrer le fichier") }}
+</form>
+{% endblock %}

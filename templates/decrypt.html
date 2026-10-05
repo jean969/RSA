@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "_macros.html" import dropzone, key_card, action_bar %}
+{% block title %}Déchiffrer · RSA File Secure{% endblock %}
+{% block content %}
+<h1>Déchiffre le fichier</h1>
+<form data-ajax action="{{ url_for('decrypt_post') }}" method="post" enctype="multipart/form-data" data-busy="Déchiffrement en cours…" data-ok="Fichier déchiffré">
+  <div class="cols">
+    {{ dropzone("Fichier chiffré (.rsa)", "Glisse le fichier .rsa ici", ".rsa") }}
+    {{ key_card("Clé privée", "", "", "", "Utilise la clé privée associée à votre clé publique. ") }}
+  </div>
+  {{ action_bar("Prêt à déchiffrer", "", "Déchiffrer le fichier") }}
+</form>
+{% endblock %}

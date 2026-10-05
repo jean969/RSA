@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}RSA File Secure{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="nav">
+  <a class="logo" href="{{ url_for('keys_page') }}"><span class="lg">&#128274;</span>RSA File Secure</a>
+  <nav class="tabs">
+    <a class="tab {{ 'on' if page == 'keys' }}" href="{{ url_for('keys_page') }}">Clés</a>
+    <a class="tab {{ 'on' if page == 'encrypt' }}" href="{{ url_for('encrypt_page') }}">Chiffrer</a>
+    <a class="tab {{ 'on' if page == 'decrypt' }}" href="{{ url_for('decrypt_page') }}">Déchiffrer</a>
+  </nav>
+</header>
+<main class="wrap">{% block content %}{% endblock %}</main>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
