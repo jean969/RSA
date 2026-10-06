@@ -36,6 +36,17 @@ def read_upload():
         raise FileFormatError("Choisis d'abord un fichier.")
     return os.path.basename(f.filename), f.read()
 
+def read_encrypt_input():
+    f = request.files.get("file")
+    has_file = bool(f and f.filename)
+    text = request.form.get("text", "")
+    has_text = text != ""
+    if has_file == has_text:
+        raise FileFormatError("Choisis un fichier ou saisis un texte à chiffrer, mais pas les deux.")
+    if has_file:
+        return os.path.basename(f.filename), f.read()
+    return "texte.txt", text.encode("utf-8")
+
 @app.get("/")
 def index():
     return render_template("index.html", page="home")
@@ -59,7 +70,7 @@ def encrypt_page():
 
 @app.post("/encrypt")
 def encrypt_post():
-    name, data = read_upload()
+    name, data = read_encrypt_input()
     blob = encrypt_file(data, name, read_key("public"))
     return send_file(BytesIO(blob), as_attachment=True, download_name=name + ".rsa",
                      mimetype="application/octet-stream")
