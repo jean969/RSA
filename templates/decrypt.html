@@ -3,7 +3,11 @@
 {% block title %}Déchiffrer · RSA File Secure{% endblock %}
 {% block content %}
 <h1>Déchiffre le fichier</h1>
-<form data-ajax action="{{ url_for('decrypt_post') }}" method="post" enctype="multipart/form-data" data-busy="Déchiffrement en cours…" data-ok="Fichier déchiffré">
+<ol class="process-steps" aria-label="Étapes de déchiffrement">
+  <li><span>Étape 1</span>Choisissez le fichier chiffré au format <b>.rsa</b>.</li>
+  <li><span>Étape 2</span>Importez votre <b>clé privée</b> — ne la partagez jamais.</li>
+</ol>
+<form data-ajax action="{{ url_for('decrypt_post') }}" method="post" enctype="multipart/form-data" data-busy="Déchiffrement en cours…" data-ok="Fichier déchiffré" data-next="Le fichier original est prêt à être téléchargé. Gardez votre clé privée secrète.">
   <div class="cols">
     {{ dropzone("Fichier chiffré (.rsa)", "Glisse le fichier .rsa ici", ".rsa") }}
     {{ key_card("Clé privée", "", "", "", "Utilise la clé privée associée à votre clé publique. ") }}

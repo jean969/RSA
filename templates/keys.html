@@ -3,6 +3,10 @@
 {% block content %}
 <h1>Génère tes clés RSA</h1>
 <p class="muted lead">À faire une seule fois : tu réutilises ensuite la même paire pour tous tes fichiers.</p>
+<aside class="key-reminder" aria-label="Règles de sécurité pour les clés">
+  <div class="key-rule public"><span aria-hidden="true">↗</span><p><b>Clé publique</b>Téléchargez et partagez seulement la clé publique.</p></div>
+  <div class="key-rule private"><span aria-hidden="true">🔒</span><p><b>Clé privée</b>Ne partagez jamais la clé privée.</p></div>
+</aside>
 <div class="card gen">
   <div class="grow"><label class="lab" for="bits">Taille du module</label>
     <select id="bits" class="inp">

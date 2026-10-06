@@ -4,15 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}RSA File Secure{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-<header class="nav">
-  <a class="logo" href="{{ url_for('keys_page') }}"><span class="lg">&#128274;</span>RSA File Secure</a>
-  <nav class="tabs">
-    <a class="tab {{ 'on' if page == 'keys' }}" href="{{ url_for('keys_page') }}">Clés</a>
-    <a class="tab {{ 'on' if page == 'encrypt' }}" href="{{ url_for('encrypt_page') }}">Chiffrer</a>
-    <a class="tab {{ 'on' if page == 'decrypt' }}" href="{{ url_for('decrypt_page') }}">Déchiffrer</a>
+<header class="site-header">
+  <nav class="floating-nav" aria-label="Navigation principale">
+    <a class="nav-brand" href="{{ url_for('index') }}" aria-label="RSA File Secure — Accueil">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="24" r="18"/><path d="M6 24h36M24 6c6 5 9 11 9 18s-3 13-9 18c-6-5-9-11-9-18S18 11 24 6Z"/></svg>
+    </a>
+    <div class="nav-links">
+      <a class="nav-item {{ 'on' if page == 'home' }}" href="{{ url_for('index') }}">Accueil</a>
+      <a class="nav-item {{ 'on' if page == 'keys' }}" href="{{ url_for('keys_page') }}">Clés</a>
+      <a class="nav-item {{ 'on' if page == 'encrypt' }}" href="{{ url_for('encrypt_page') }}">Chiffrer</a>
+      <a class="nav-item {{ 'on' if page == 'decrypt' }}" href="{{ url_for('decrypt_page') }}">Déchiffrer</a>
+    </div>
+    <a class="nav-cta" href="{{ url_for('keys_page') }}">Générer mes clés</a>
   </nav>
 </header>
 <main class="wrap">{% block content %}{% endblock %}</main>

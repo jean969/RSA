@@ -38,7 +38,7 @@ def read_upload():
 
 @app.get("/")
 def index():
-    return redirect(url_for("keys_page"))
+    return render_template("index.html", page="home")
 
 @app.get("/keys")
 def keys_page():
