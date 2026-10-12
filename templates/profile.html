@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Mon profil · RSA File Secure{% endblock %}
+{% block content %}
+<div class="profile-layout">
+  <section class="profile-preview card">
+    {% if user.avatar_name %}<img class="avatar large" src="{{ url_for('avatar', filename=user.avatar_name) }}" alt="Photo de profil de {{ user.username }}">{% else %}<div class="avatar large placeholder">{{ (user.display_name or user.username)[0]|upper }}</div>{% endif %}
+    <h1>{{ user.display_name or user.username }}</h1><p class="muted">@{{ user.username }}</p>
+    {% if user.bio %}<p class="profile-bio">{{ user.bio }}</p>{% endif %}
+    <span class="key-status {{ 'ready' if user.public_key else 'missing' }}">{{ 'Clé publique publiée' if user.public_key else 'Clé publique manquante' }}</span>
+    <div class="profile-key-actions"><a class="btn pri" href="{{ url_for('keys_page') }}">Générer mes clés</a><a class="btn out" href="{{ url_for('public_key_profile') }}">Publier ma clé publique</a></div>
+  </section>
+  <section class="card">
+    <h2>Modifier mon profil</h2>
+    <form method="post" enctype="multipart/form-data" class="stack-form">
+      <label class="lab" for="display_name">Nom affiché</label><input class="inp" id="display_name" name="display_name" value="{{ user.display_name or '' }}" maxlength="50" placeholder="Ex. Jean Dupont">
+      <label class="lab" for="bio">Présentation</label><textarea class="inp text-input" id="bio" name="bio" rows="5" maxlength="280" placeholder="Quelques mots sur vous…">{{ user.bio or '' }}</textarea>
+      <label class="lab" for="avatar">Photo de profil</label><input class="inp file-input" id="avatar" name="avatar" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+      <button class="btn pri" type="submit">Enregistrer le profil</button>
+    </form>
+    <form method="post" action="{{ url_for('logout') }}" class="logout-form"><button type="submit">Se déconnecter</button></form>
+  </section>
+</div>
+{% endblock %}

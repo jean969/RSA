@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Connexion · RSA File Secure{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <aside class="auth-story" aria-label="RSA File Secure">
+    <a class="auth-mark" href="{{ url_for('index') }}" aria-label="Retour à l'accueil">⌁</a>
+    <div class="auth-story-copy"><p class="eyebrow">RSA FILE SECURE</p><h1>Vos échanges.<br><span>Votre espace.</span></h1><p>Connectez-vous pour retrouver vos contacts, vos messages et vos fichiers chiffrés.</p></div>
+    <div class="auth-story-foot"><span>MESSAGERIE PRIVÉE</span><span>RSA</span></div>
+  </aside>
+  <div class="auth-form-panel">
+    <p class="eyebrow">BON RETOUR</p>
+    <h1>Se connecter</h1>
+    <p class="muted lead">Accédez à votre boîte de réception chiffrée.</p>
+    <form method="post" class="stack-form">
+      <label class="lab" for="username">Nom d'utilisateur</label><input class="inp" id="username" name="username" autocomplete="username" required>
+      <label class="lab" for="password">Mot de passe</label><input class="inp" id="password" name="password" type="password" autocomplete="current-password" required>
+      <button class="btn pri wide" type="submit">Se connecter</button>
+    </form>
+    <p class="muted account-switch">Pas encore de compte ? <a href="{{ url_for('register') }}">Créer un compte</a></p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Créer un compte · RSA File Secure{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <aside class="auth-story" aria-label="RSA File Secure">
+    <a class="auth-mark" href="{{ url_for('index') }}" aria-label="Retour à l'accueil">⌁</a>
+    <div class="auth-story-copy"><p class="eyebrow">RSA FILE SECURE</p><h1>Un compte.<br><span>Vos règles.</span></h1><p>Créez un espace privé pour échanger uniquement avec les contacts que vous acceptez.</p></div>
+    <div class="auth-story-foot"><span>CLÉ PRIVÉE · À VOUS</span><span>RSA</span></div>
+  </aside>
+  <div class="auth-form-panel">
+    <p class="eyebrow">COMMENCER</p>
+    <h1>Créer un compte</h1>
+    <p class="muted lead">Votre compte permet de recevoir des fichiers chiffrés. Votre clé privée ne sera jamais déposée ici.</p>
+    <form method="post" class="stack-form">
+      <label class="lab" for="username">Nom d'utilisateur</label><input class="inp" id="username" name="username" autocomplete="username" required minlength="3" maxlength="32">
+      <label class="lab" for="password">Mot de passe</label><input class="inp" id="password" name="password" type="password" autocomplete="new-password" required minlength="8">
+      <button class="btn pri wide" type="submit">Créer mon compte</button>
+    </form>
+    <p class="muted account-switch">Déjà inscrit ? <a href="{{ url_for('login') }}">Se connecter</a></p>
+  </div>
+</section>
+{% endblock %}

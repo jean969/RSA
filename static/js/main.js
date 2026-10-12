@@ -18,6 +18,41 @@
     });
   }
 
+  // Les deux iPhones de l'accueil se séparent au défilement pour révéler les échanges.
+  const scrollVisual = document.querySelector("[data-scroll-visual]");
+  if (scrollVisual && !window.matchMedia("(prefers-reduced-motion: reduce)").matches && !window.matchMedia("(max-width: 820px)").matches) {
+    const scrollScene = scrollVisual.closest("[data-scroll-scene]");
+    const securitySection = document.getElementById("securite");
+    let scheduled = false;
+    const updateScrollVisual = () => {
+      const viewport = window.innerHeight || 1;
+      const sceneStart = scrollScene ? scrollScene.offsetTop : 0;
+      const sceneEnd = securitySection ? securitySection.offsetTop - viewport * 0.42 : sceneStart + viewport;
+      const travel = Math.max(1, sceneEnd - sceneStart);
+      const progress = Math.max(0, Math.min(1, (window.scrollY - sceneStart) / travel));
+      scrollVisual.style.setProperty("--phone-one-x", (45 + 135 * progress).toFixed(1) + "px");
+      scrollVisual.style.setProperty("--phone-one-y", (230 * progress).toFixed(1) + "px");
+      scrollVisual.style.setProperty("--phone-one-rotate", (3 + 8 * progress).toFixed(2) + "deg");
+      scrollVisual.style.setProperty("--phone-one-scale", (1 - 0.16 * progress).toFixed(3));
+      scrollVisual.style.setProperty("--phone-two-x", (-112 - 668 * progress).toFixed(1) + "px");
+      scrollVisual.style.setProperty("--phone-two-y", (48 + 205 * progress).toFixed(1) + "px");
+      scrollVisual.style.setProperty("--phone-two-rotate", (-14 - 10 * progress).toFixed(2) + "deg");
+      scrollVisual.style.setProperty("--phone-two-scale", (0.82 - 0.12 * progress).toFixed(3));
+      scrollVisual.style.setProperty("--halo-scale", (1 + 0.18 * progress).toFixed(3));
+      scrollVisual.style.setProperty("--halo-opacity", (1 - 0.5 * progress).toFixed(3));
+      scrollVisual.style.setProperty("--tag-up", (-72 * progress).toFixed(1) + "px");
+      scrollVisual.style.setProperty("--tag-down", (86 * progress).toFixed(1) + "px");
+      scrollVisual.classList.toggle("is-finished", Boolean(securitySection && window.scrollY > securitySection.offsetTop + viewport * 0.2));
+      scheduled = false;
+    };
+    const requestUpdate = () => {
+      if (!scheduled) { scheduled = true; window.requestAnimationFrame(updateScrollVisual); }
+    };
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    requestUpdate();
+  }
+
   function banner(box, cls, title, text, extra) {
     box.replaceChildren();
     const d = document.createElement("div");

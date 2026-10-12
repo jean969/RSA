@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Messages · RSA File Secure{% endblock %}
+{% block content %}
+<h1>Messages chiffrés</h1>
+<p class="muted lead">Sélectionnez un contact accepté. Les messages restent chiffrés jusqu'à leur déchiffrement avec la clé privée du destinataire.</p>
+{% if contacts %}<div class="conversation-list">{% for contact in contacts %}<a class="conversation-row" href="{{ url_for('conversation', contact_id=contact.id) }}">{% if contact.avatar_name %}<img class="avatar" src="{{ url_for('avatar', filename=contact.avatar_name) }}" alt="">{% else %}<div class="avatar placeholder">{{ (contact.display_name or contact.username)[0]|upper }}</div>{% endif %}<div class="contact-identity"><strong>{{ contact.display_name or contact.username }}</strong><span>@{{ contact.username }}{% if contact.last_message_at %} · dernier message le {{ contact.last_message_at[:10] }}{% endif %}</span></div>{% if contact.unread_count %}<span class="unread-count">{{ contact.unread_count }}</span>{% endif %}</a>{% endfor %}</div>{% else %}<div class="card empty-state"><h2>Aucune conversation</h2><p class="muted">Ajoutez puis acceptez un contact pour commencer un échange chiffré.</p><a class="btn pri" href="{{ url_for('contacts') }}">Gérer mes contacts</a></div>{% endif %}
+{% endblock %}

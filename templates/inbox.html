@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Réception · RSA File Secure{% endblock %}
+{% block content %}
+<div class="inbox-head"><div><h1>Ma réception</h1><p class="muted lead">Les fichiers chiffrés peuvent expirer après 24 h, 7 jours ou le premier téléchargement.</p></div><a class="btn pri" href="{{ url_for('messages') }}">Ouvrir mes messages</a></div>
+{% if not has_key %}<div class="note err">Vous ne pouvez pas encore recevoir de fichier : <a href="{{ url_for('public_key_profile') }}">publiez votre clé publique</a>.</div>{% endif %}
+{% if received %}
+<div class="transfer-list">{% for transfer in received %}<article class="transfer {{ 'is-expired' if transfer.expired_at else '' }}"><div><strong>{{ transfer.original_name }}.rsa</strong><p>Envoyé par <b>{{ transfer.sender_name }}</b> · le {{ transfer.created_at[:10] }}</p><span class="transfer-status {{ 'expired' if transfer.expired_at else ('read' if transfer.downloaded_at else 'new') }}">{% if transfer.expired_at %}Expiré{% elif transfer.downloaded_at %}Téléchargé{% else %}Nouveau{% endif %}</span></div>{% if not transfer.expired_at %}<div class="row"><a class="btn out" href="{{ url_for('download_transfer', transfer_id=transfer.id) }}">1. Télécharger</a><a class="btn pri" href="{{ url_for('decrypt_page') }}">2. Déchiffrer</a></div>{% endif %}</article>{% endfor %}</div>
+{% else %}<div class="card empty-state"><h2>Aucun fichier reçu</h2><p class="muted">Quand un ami vous enverra un fichier chiffré, il apparaîtra ici.</p></div>{% endif %}
+{% endblock %}

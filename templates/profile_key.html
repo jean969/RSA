@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Ma clé publique · RSA File Secure{% endblock %}
+{% block content %}
+<h1>Publier ma clé publique</h1>
+<p class="muted lead">Les autres utilisateurs utilisent cette clé pour vous envoyer un fichier illisible par le serveur.</p>
+<div class="card narrow-card">
+  <p class="note info">{{ "Une clé publique est déjà enregistrée. Vous pouvez la remplacer." if has_key else "Importez le fichier cle_publique.json téléchargé depuis la page Clés." }}</p>
+  <form method="post" enctype="multipart/form-data" class="stack-form">
+    <label class="lab" for="public_key">Fichier de clé publique (.json)</label>
+    <input class="inp file-input" id="public_key" name="public_key" type="file" accept=".json,application/json" required>
+    <button class="btn pri" type="submit">Enregistrer ma clé publique</button>
+  </form>
+</div>
+{% endblock %}

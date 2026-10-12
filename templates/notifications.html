@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Alertes · RSA File Secure{% endblock %}
+{% block content %}
+<h1>Alertes</h1>
+<p class="muted lead">Vos nouveaux contacts, messages et fichiers chiffrés sont regroupés ici.</p>
+{% if contact_requests or messages_received or files_received %}
+  <div class="notification-list">
+    {% for contact in contact_requests %}<article class="notification"><div class="notification-icon">+</div><div><strong>Nouvelle demande de contact</strong><p><b>{{ contact.display_name or contact.username }}</b> souhaite vous ajouter · {{ contact.created_at[:16].replace('T', ' ') }}</p></div><a class="btn out" href="{{ url_for('contacts') }}">Voir</a></article>{% endfor %}
+    {% for message in messages_received %}<article class="notification"><div class="notification-icon">✉</div><div><strong>Nouveau message chiffré</strong><p><b>{{ message.display_name or message.username }}</b> vous a écrit · {{ message.created_at[:16].replace('T', ' ') }}</p></div><a class="btn out" href="{{ url_for('conversation', contact_id=message.sender_id) }}">Voir</a></article>{% endfor %}
+    {% for transfer in files_received %}<article class="notification"><div class="notification-icon">↓</div><div><strong>Nouveau fichier chiffré</strong><p><b>{{ transfer.display_name or transfer.username }}</b> vous a envoyé {{ transfer.original_name }}.rsa · {{ transfer.created_at[:16].replace('T', ' ') }}</p></div><a class="btn out" href="{{ url_for('inbox') }}">Voir</a></article>{% endfor %}
+  </div>
+{% else %}
+  <div class="card empty-state"><h2>Aucune nouvelle alerte</h2><p class="muted">Les nouvelles demandes, messages et fichiers chiffrés apparaîtront ici.</p></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Historique · RSA File Secure{% endblock %}
+{% block content %}
+<div class="inbox-head"><div><h1>Historique des envois</h1><p class="muted lead">Suivez l'état de chaque fichier chiffré envoyé à vos contacts.</p></div><a class="btn pri" href="{{ url_for('send_to_friend') }}">Envoyer un fichier</a></div>
+{% if sent %}<div class="transfer-list">{% for transfer in sent %}<article class="transfer {{ 'is-expired' if transfer.expired_at else '' }}"><div><strong>{{ transfer.original_name }}.rsa</strong><p>Pour <b>{{ transfer.recipient_name }}</b> · envoyé le {{ transfer.created_at[:10] }}</p><span class="transfer-status {{ 'expired' if transfer.expired_at else ('read' if transfer.downloaded_at else 'new') }}">{% if transfer.expired_at and transfer.expires_on_download %}Supprimé après téléchargement{% elif transfer.expired_at %}Expiré{% elif transfer.downloaded_at %}Téléchargé{% else %}En attente de téléchargement{% endif %}</span></div><span class="expiry-date">Expiration : {{ transfer.expires_at[:10] }}</span></article>{% endfor %}</div>{% else %}<div class="card empty-state"><h2>Aucun fichier envoyé</h2><p class="muted">Vos prochains envois à des contacts acceptés apparaîtront ici.</p></div>{% endif %}
+{% endblock %}

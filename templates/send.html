@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Envoyer un fichier · RSA File Secure{% endblock %}
+{% block content %}
+<h1>Envoyer un fichier chiffré</h1>
+<p class="muted lead">Le fichier est chiffré pour le destinataire choisi, puis seul son fichier <code>.rsa</code> est conservé temporairement.</p>
+{% if recipients %}
+<form method="post" enctype="multipart/form-data" class="send-form">
+  <div class="card">
+    <label class="lab" for="recipient">Destinataire</label>
+    <select class="inp" id="recipient" name="recipient" required>{% for recipient in recipients %}<option value="{{ recipient.id }}">{{ recipient.username }}</option>{% endfor %}</select>
+    <label class="lab" for="file">Fichier à chiffrer</label>
+    <input class="inp file-input" id="file" name="file" type="file">
+    <label class="lab" for="expiry">Durée de disponibilité</label>
+    <select class="inp" id="expiry" name="expiry"><option value="24h">24 heures</option><option value="7d" selected>7 jours</option><option value="first_download">Supprimer après le premier téléchargement</option></select>
+    <p class="or">ou saisir un texte</p>
+    <label class="lab" for="text">Texte à chiffrer</label><textarea class="inp text-input" id="text" name="text" rows="6" placeholder="Saisissez un message…"></textarea>
+    <p class="muted">Choisissez un fichier ou saisissez un texte, mais pas les deux. Le serveur conserve uniquement la version chiffrée.</p>
+    <button class="btn pri" type="submit">Chiffrer et envoyer</button>
+  </div>
+</form>
+{% else %}
+<div class="card empty-state"><h2>Aucun destinataire disponible</h2><p class="muted">Un autre utilisateur doit créer un compte et publier sa clé publique avant de pouvoir recevoir vos fichiers.</p></div>
+{% endif %}
+{% endblock %}
