@@ -15,9 +15,10 @@ pytest                   # lance les tests
 ## Utilisation (scénario du binôme)
 
 1. **Jean** ouvre « Clés », génère sa paire, télécharge `cle_publique.json` et `cle_privee.json`.
-2. Jean envoie `cle_publique.json` à son binôme (la clé privée ne quitte jamais sa machine).
+2. Jean envoie `cle_publique.json` à son binôme et conserve sa clé privée.
 3. Le **binôme** ouvre « Chiffrer », choisit le fichier, importe `cle_publique.json`, télécharge le `.rsa`.
 4. Jean ouvre « Déchiffrer », choisit le `.rsa`, importe `cle_privee.json`, récupère le fichier d'origine.
+5. Dans une conversation, le destinataire importe sa clé privée et choisit « Déchiffrer le message » pour afficher le texte dans le chat.
 
 ## Structure
 
@@ -43,7 +44,9 @@ tests/            pytest (dont p=61, q=53, e=17, M=65)
   Le SHA-256 détecte une mauvaise clé ou un fichier corrompu.
 - **Clé privée** : le fichier JSON contient aussi p et q (déchiffrement ~3x plus rapide, théorème des restes chinois).
   Il reste secret. Avec n et d saisis à la main, le calcul est plus lent mais correct.
-- Le serveur ne stocke ni fichier ni clé.
+- La page de génération crée une paire RSA de 2048 bits pour le compte connecté :
+  la clé publique est enregistrée dans le profil et la clé privée est proposée au téléchargement.
+  Le serveur ne stocke jamais la clé privée. Pour déchiffrer un message dans le chat, le fichier de clé privée est transmis au serveur le temps du traitement ; la clé et le texte déchiffré ne sont pas enregistrés.
 
 ## Limites (à citer dans le rapport)
 
@@ -51,7 +54,7 @@ tests/            pytest (dont p=61, q=53, e=17, M=65)
   donnent le même chiffré.
 - On ne chiffre pas un fichier entier avec RSA en pratique : on chiffre une clé AES, et AES chiffre le fichier
   (schéma hybride). Ici l'énoncé impose RSA direct.
-- 1024 bits est choisi pour la rapidité en Python ; 2048 bits est le minimum recommandé aujourd'hui.
+- La génération de clés 2048 bits en Python peut prendre quelques secondes.
 - Pas d'authentification de la clé publique : un attaquant qui remplace la clé en route (homme du milieu) lirait les fichiers.
 - Taille limitée à 8 Mo par fichier.
 - Vitesse : le déchiffrement RSA est coûteux. Mesuré (1024 bits, machine de test) : chiffrement ~0,5 s/Mo,

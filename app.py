@@ -18,7 +18,7 @@ app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024  # 8 Mo
 app.config["DATABASE"] = os.path.join(app.instance_path, "rsa_file_secure.db")
 app.config["UPLOAD_FOLDER"] = os.path.join(app.instance_path, "encrypted_uploads")
 app.config["AVATAR_FOLDER"] = os.path.join(app.instance_path, "avatars")
-ALLOWED_BITS = (1024, 2048)
+KEY_BITS = 2048
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 os.makedirs(app.config["AVATAR_FOLDER"], exist_ok=True)
 initialize(app.config["DATABASE"])
@@ -450,6 +450,28 @@ def download_message(message_id):
         connection.commit()
     return send_file(BytesIO(message["encrypted_payload"]), as_attachment=True, download_name="message.rsa", mimetype="application/octet-stream")
 
+@app.post("/messages/<int:message_id>/decrypt")
+@login_required
+def decrypt_message(message_id):
+    user = current_user()
+    with db() as connection:
+        message = connection.execute(
+            "SELECT encrypted_payload FROM messages WHERE id = ? AND recipient_id = ?",
+            (message_id, user["id"]),
+        ).fetchone()
+    if not message:
+        abort(404)
+    key_file = request.files.get("key_file")
+    if not key_file or not key_file.filename:
+        raise FileFormatError("Importez votre fichier de clé privée.")
+    private = keys.private_from_json(key_file.read().decode("utf-8", "replace"))
+    _, plaintext = decrypt_file(message["encrypted_payload"], private)
+    try:
+        text = plaintext.decode("utf-8")
+    except UnicodeDecodeError as err:
+        raise FileFormatError("Le contenu déchiffré n'est pas un message texte UTF-8.") from err
+    return jsonify(message=text)
+
 @app.get("/transfers/<int:transfer_id>/download")
 @login_required
 def download_transfer(transfer_id):
@@ -476,16 +498,22 @@ def download_transfer(transfer_id):
     return send_file(path, as_attachment=True, download_name=transfer["original_name"] + ".rsa", mimetype="application/octet-stream")
 
 @app.get("/keys")
+@login_required
 def keys_page():
-    return render_template("keys.html", page="keys", bits=ALLOWED_BITS)
+    user = current_user()
+    return render_template("keys.html", page="keys", has_key=bool(user["public_key"]))
 
 @app.post("/keys/generate")
+@login_required
 def keys_generate():
-    bits = request.form.get("bits", type=int)
-    if bits not in ALLOWED_BITS:
+    if request.form.get("bits", type=int) != KEY_BITS:
         return jsonify(error="Taille de clé non autorisée."), 400
-    pub, priv = keys.generate_keypair(bits)  # rien n'est stocké côté serveur
-    return jsonify(n=str(pub.n), e=str(pub.e), d=str(priv.d),
+    pub, priv = keys.generate_keypair(KEY_BITS)
+    user = current_user()
+    with db() as connection:
+        connection.execute("UPDATE users SET public_key = ? WHERE id = ?", (pub.to_json(), user["id"]))
+        connection.commit()
+    return jsonify(n=str(pub.n), e=str(pub.e),
                    public_json=pub.to_json(), private_json=priv.to_json())
 
 @app.get("/encrypt")

@@ -153,6 +153,37 @@
     go.disabled = false; go.textContent = label;
   });
 
+  document.querySelectorAll("form[data-message-decrypt]").forEach((decryptForm) => {
+    decryptForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = $("button[type=submit]", decryptForm);
+      const error = $(".message-decrypt-error", decryptForm);
+      const result = $(".decrypted-message", decryptForm.closest(".message-bubble"));
+      const label = button.textContent;
+      error.hidden = true;
+      button.disabled = true;
+      button.textContent = "Déchiffrement en cours…";
+      try {
+        const response = await fetch(decryptForm.action, {
+          method: "POST",
+          body: new FormData(decryptForm)
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Déchiffrement impossible.");
+        result.textContent = data.message;
+        result.hidden = false;
+        decryptForm.reset();
+        decryptForm.hidden = true;
+      } catch (err) {
+        error.textContent = err.message || "Connexion impossible.";
+        error.hidden = false;
+      } finally {
+        button.disabled = false;
+        button.textContent = label;
+      }
+    });
+  });
+
   // Page des clés
   const gen = $("#gen");
   if (gen) {
@@ -166,14 +197,14 @@
       const err = $("#error"); err.hidden = true;
       gen.disabled = true; gen.textContent = "Génération en cours…";
       try {
-        const res = await fetch("/keys/generate", { method: "POST", body: new URLSearchParams({ bits: $("#bits").value }) });
+        const res = await fetch("/keys/generate", { method: "POST", body: new URLSearchParams({ bits: "2048" }) });
         const d = await res.json();
         if (!res.ok) throw new Error(d.error);
-        $("#pub-n").textContent = d.n; $("#priv-n").textContent = d.n;
-        $("#pub-e").textContent = d.e; $("#priv-d").textContent = d.d;
+        $("#pub-n").textContent = d.n;
+        $("#pub-e").textContent = d.e;
         pub = d.public_json; priv = d.private_json; $("#keys").hidden = false;
       } catch (e2) { err.textContent = e2.message || "Génération impossible."; err.hidden = false; }
-      gen.disabled = false; gen.textContent = "Générer les clés";
+      gen.disabled = false; gen.textContent = "Génère tes clés RSA";
     });
     $("#dl-pub").addEventListener("click", () => save("cle_publique.json", pub));
     $("#dl-priv").addEventListener("click", () => save("cle_privee.json", priv));

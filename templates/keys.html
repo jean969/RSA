@@ -2,17 +2,15 @@
 {% block title %}Clés · RSA File Secure{% endblock %}
 {% block content %}
 <h1>Génère tes clés RSA</h1>
-<p class="muted lead">À faire une seule fois : tu réutilises ensuite la même paire pour tous tes fichiers.</p>
+<p class="muted lead">Génère une paire de clés RSA de 2048 bits associée à ton compte.</p>
 <aside class="key-reminder" aria-label="Règles de sécurité pour les clés">
-  <div class="key-rule public"><span aria-hidden="true">↗</span><p><b>Clé publique</b>Téléchargez et partagez seulement la clé publique.</p></div>
-  <div class="key-rule private"><span aria-hidden="true">🔒</span><p><b>Clé privée</b>Ne partagez jamais la clé privée.</p></div>
+  <div class="key-rule public"><span aria-hidden="true">↗</span><p><b>Clé publique</b>Elle sera enregistrée sur ton compte et partagée pour recevoir des fichiers.</p></div>
+  <div class="key-rule private"><span aria-hidden="true">🔒</span><p><b>Clé privée</b>Elle sera téléchargée sur ton appareil. Ne la partage jamais.</p></div>
 </aside>
+{% if has_key %}<div class="note info">Une clé publique est déjà associée à ton compte. Générer une nouvelle paire la remplacera ; conserve l’ancienne clé privée pour déchiffrer tes anciens fichiers.</div>{% endif %}
 <div class="card gen">
-  <div class="grow"><label class="lab" for="bits">Taille du module</label>
-    <select id="bits" class="inp">
-      {% for b in bits %}<option value="{{ b }}">{{ b }} bits{{ "" if b == 1024 else " (recommandé)" }}</option>{% endfor %}
-    </select></div>
-  <button class="btn pri" type="button" id="gen">Générer les clés</button>
+  <div class="grow"><span class="lab">Taille des clés</span><strong>2048 bits</strong></div>
+  <button class="btn pri" type="button" id="gen">Génère tes clés RSA</button>
 </div>
 <div id="error" class="note err" role="alert" hidden></div>
 <div class="cols" id="keys" hidden>
@@ -20,16 +18,14 @@
     <div class="head"><h2>Clé publique</h2><span class="badge g">À partager</span></div>
     <span class="lab">Module</span><div class="mono" id="pub-n"></div>
     <span class="lab"></span><div class="mono" id="pub-e"></div>
-    <div class="note info">Cette clé sera utiliser pour chiffrer tous les fichiers.</div>
+    <div class="note info">Cette clé publique est enregistrée sur ton compte.</div>
     <div class="row"><button class="btn out" type="button" id="copy-pub">Copier</button>
       <button class="btn pri" type="button" id="dl-pub">Télécharger</button></div>
   </div>
   <div class="card">
     <div class="head"><h2>Clé privée</h2><span class="badge r">Secrète</span></div>
-    <span class="lab">Module</span><div class="mono" id="priv-n"></div>
-    <span class="lab"></span><div class="mono" id="priv-d"></div>
-    <div class="note err">Ne la partage jamais et garde votre clé privée en lieu sûr : sans lui, tes fichiers reçus restent illisibles.</div>
-    <div class="row"><button class="btn out danger" type="button" id="dl-priv">Télécharger</button></div>
+    <div class="note err">La clé privée n’est pas enregistrée sur le serveur. Télécharge-la et conserve-la en lieu sûr : sans elle, tes fichiers reçus restent illisibles.</div>
+    <div class="row"><button class="btn out danger" type="button" id="dl-priv">Télécharger ma clé privée</button></div>
   </div>
 </div>
 {% endblock %}
